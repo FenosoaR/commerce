@@ -7,13 +7,12 @@ export default function Panier() {
   const [panier, setPanier] = useState(
     <tr>
       <td></td>
-      <td></td>
       <td>Votre panier est vide</td>
       <td></td>
     </tr>
   );
+  const [error, setError] = useState(null);
   const token = localStorage.getItem("ssid");
-  let localStoragePanier = localStorage.getItem("panier");
 
   const [refresh, setRefresh] = useState(false);
   const [total, setTotal] = useState(0);
@@ -35,8 +34,6 @@ export default function Panier() {
         localStorage.setItem("panier", JSON.stringify(tabPanier));
         setRefresh(true);
       }
-
-     
 
       let htmlPanier = tabPanier.map((value, index) => {
         return (
@@ -86,40 +83,64 @@ export default function Panier() {
       [e.target.name]: e.target.value,
     });
   }
+  const popError = document.querySelector(".pop-error");
 
   function handleCommande(e) {
     e.preventDefault();
 
-    let tabPanier = JSON.parse(localStoragePanier);
+    let localStoragePanier = localStorage.getItem("panier");
 
-    for (let index = 0; index < tabPanier.length; index++) {
-      tabPanier[index].addresse_livraison = state.addresse_livraison;
-      tabPanier[index].date_livraison = state.date_livraison;
-    }
+   
+      if (!localStoragePanier) {
+        if (!token) {
+          setError("Vous devriez vous connecter");
+          popError.style.display = "block";
+        } else {
+          setError("Votre panier est vide");
+          popError.style.display = "block";
+        }
+      } else {
+        let tabPanier = JSON.parse(localStoragePanier);
 
-    for (let index = 0; index < tabPanier.length; index++) {
-      axios
-        .post(
-          "http://localhost:9000/api/product/addCommande/" +
-            tabPanier[index].ProductId,
-          tabPanier[index],
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          socket.emit("new_commande", tabPanier);
+        if (!tabPanier.length) {
+          setError("Votre panier est vide");
+          popError.style.display = "block";
+        }
+        for (let index = 0; index < tabPanier.length; index++) {
+          tabPanier[index].addresse_livraison = state.addresse_livraison;
+          tabPanier[index].date_livraison = state.date_livraison;
+        }
+        for (let index = 0; index < tabPanier.length; index++) {
+          axios
+            .post(
+              "http://localhost:9000/api/product/addCommande/" +
+                tabPanier[index].ProductId,
+              tabPanier[index],
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
+            .then((res) => {
+              socket.emit("new_commande", tabPanier);
 
-          if (tabPanier && tabPanier.length > 0) {
-            tabPanier.splice(tabPanier, 1);
-          }
-          localStorage.setItem("panier", JSON.stringify(tabPanier));
-          setRefresh(true);
-        })
-        .catch((er) => console.log(er));
-    }
+              if (tabPanier && tabPanier.length > 0) {
+                tabPanier.splice(tabPanier, 1);
+              }
+              localStorage.setItem("panier", JSON.stringify(tabPanier));
+              setRefresh(true);
+            })
+            .catch((er) => console.log(er));
+        }
+      }
+    
+  }
+
+  function closePopError() {
+    if(popError){
+      popError.style.display = "none";
+    }  
   }
 
   return (
@@ -162,9 +183,16 @@ export default function Panier() {
                     onChange={handleChange}
                   />
                 </div>
-
-                <button className="btn btn-panier">Valider l'achat</button>
+                <button className="btn btn-panier" id="button-panier">
+                  Valider l'achat
+                </button>
               </form>
+            </div>
+            <div className="pop-error">
+              {error && <div className="error">{error}</div>}
+              <button className="btn" onClick={closePopError}>
+                OK
+              </button>
             </div>
           </div>
         </div>

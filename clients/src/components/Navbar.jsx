@@ -17,7 +17,7 @@ export default function Navbar() {
   return (
     <div>
       <div className="nav-home">
-        <span>E-tsena</span>
+       <Link to={'/'} style={{textDecoration : "none"}}><span>E-tsena</span></Link>
         <div className="icone">
           <ul>
             {token ? (

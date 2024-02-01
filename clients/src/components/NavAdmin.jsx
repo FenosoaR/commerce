@@ -23,7 +23,7 @@ export default function NavAdmin() {
       setAffichage(
         <>
           <button className="btn logout" onClick={logout}>
-            Se deconnecter
+          {username}
           </button>
         </>
       );

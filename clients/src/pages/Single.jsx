@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 
 export default function Single() {
   const [product, setProduct] = useState({});
   const [images, setImages] = useState([]);
+  const [error , setError] = useState(null)
   const [imagesIndex, setImagesIndex] = useState(0);
-  const navigate = useNavigate();
   const params = useParams();
   const ProductId = params.id;
 
@@ -68,21 +68,23 @@ export default function Single() {
     let token = localStorage.getItem("ssid");
 
     if (!token) {
-      navigate("/");
+      setError("Veuillez-vous connecter!!!")
+
+    }else{
+      let stockagePanier = [];
+
+      const panierDansLocalStorage = localStorage.getItem("panier");
+  
+      if (panierDansLocalStorage) {
+        stockagePanier = JSON.parse(panierDansLocalStorage);
+      }
+  
+      stockagePanier.push(panier);
+      localStorage.setItem("panier", JSON.stringify(stockagePanier));
+  
+      popUp.style.display = "block";
     }
-
-    let stockagePanier = [];
-
-    const panierDansLocalStorage = localStorage.getItem("panier");
-
-    if (panierDansLocalStorage) {
-      stockagePanier = JSON.parse(panierDansLocalStorage);
-    }
-
-    stockagePanier.push(panier);
-    localStorage.setItem("panier", JSON.stringify(stockagePanier));
-
-    popUp.style.display = "block";
+  
   }
 
   if (ok) {
@@ -174,6 +176,11 @@ export default function Single() {
           </div>
           <div className="col-lg-5">
             <div className="text">
+            {error ? (
+                <div className="alert alert-danger">
+                    {error}
+                </div>
+               ) : null}
               <h2>{product.name}</h2>
               <p>{product.desc}.</p>
               <span>Color : {product.color}</span>
