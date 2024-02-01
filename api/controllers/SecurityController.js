@@ -47,7 +47,7 @@ const login = async (req, res) => {
     const isValid = bcrypt.compareSync(password, user.password);
 
     if (!isValid)
-      return res.status(200).json({ message: "Mot de passe incorrecte" });
+      return res.status(500).json({ message: "Mot de passe incorrecte" });
 
     const jwToken = jwt.sign(
       {
