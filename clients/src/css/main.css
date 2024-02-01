@@ -111,6 +111,10 @@
     text-decoration: none;
     font-weight: 600;
 }
+.error{
+    margin-top: 10px;
+    box-shadow: 2px 2px 2px 2px gray;
+}
 .category{
     color: rgb(58, 56, 56);
     text-decoration: none;
@@ -381,26 +385,7 @@
 .link-cart i{
     color: white;
 }
-.pop-error{
-    margin: auto;
-    width: 400px;
-    height:150px;
-    border-radius:8px;
-    box-shadow: 1px 2px 3px gray;
-    display: none;
-    position: relative; 
-    text-align: center;
-}
-.pop-error .error{
-    position: absolute;
-    top: 30px;
-    left: 100px;
-    font-size: 20px;
-}
-.pop-error button{
-    margin-top: 20%;
-    color: white;
-}
+
 
 
 

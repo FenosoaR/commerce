@@ -83,7 +83,7 @@ export default function Panier() {
       [e.target.name]: e.target.value,
     });
   }
-  const popError = document.querySelector(".pop-error");
+
 
   function handleCommande(e) {
     e.preventDefault();
@@ -94,17 +94,17 @@ export default function Panier() {
       if (!localStoragePanier) {
         if (!token) {
           setError("Vous devriez vous connecter");
-          popError.style.display = "block";
+        
         } else {
           setError("Votre panier est vide");
-          popError.style.display = "block";
+        
         }
       } else {
         let tabPanier = JSON.parse(localStoragePanier);
 
         if (!tabPanier.length) {
           setError("Votre panier est vide");
-          popError.style.display = "block";
+        
         }
         for (let index = 0; index < tabPanier.length; index++) {
           tabPanier[index].addresse_livraison = state.addresse_livraison;
@@ -137,11 +137,7 @@ export default function Panier() {
     
   }
 
-  function closePopError() {
-    if(popError){
-      popError.style.display = "none";
-    }  
-  }
+ 
 
   return (
     <div>
@@ -149,6 +145,7 @@ export default function Panier() {
       <div className="container-fluid">
         <div className="row cart">
           <div className="col-lg-10 offset-lg-1">
+          {error && <div className="alert error">{error}</div>}
             <table className="table">
               <thead>
                 <tr>
@@ -187,12 +184,6 @@ export default function Panier() {
                   Valider l'achat
                 </button>
               </form>
-            </div>
-            <div className="pop-error">
-              {error && <div className="error">{error}</div>}
-              <button className="btn" onClick={closePopError}>
-                OK
-              </button>
             </div>
           </div>
         </div>

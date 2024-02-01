@@ -177,7 +177,7 @@ export default function Single() {
           <div className="col-lg-5">
             <div className="text">
             {error ? (
-                <div className="alert alert-danger">
+                <div className="alert error">
                     {error}
                 </div>
                ) : null}
