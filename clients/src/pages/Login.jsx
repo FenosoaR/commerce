@@ -26,21 +26,24 @@ export default function Login() {
       .then((res) => {
         let user = res.data.user;
         let token = res.data.jwToken;
+    
 
         if (user.type === "Admin") {
           navigate("/admin");
           localStorage.setItem("ssid", token);
           localStorage.setItem("userId", user.id);
           localStorage.setItem("username", user.username);
+         
         } else {
-          console.log(res.data);
+          // console.log(res.data);
           navigate("/");
           localStorage.setItem("ssid", token);
           localStorage.setItem("userId", user.id);
           localStorage.setItem("username", user.username);
+
         }
       })
-      .catch((er) =>setError(er.response.data.message));
+      .catch((er) => setError(er.response.data.message));
   }
 
   return (
@@ -54,7 +57,7 @@ export default function Login() {
             <form action="" onSubmit={handleSubmit} className="auth">
               <h2>Veuillez-vous connecter!!</h2>
               {error && (
-                <div className="alert alert-danger" role={alert}>
+                <div className="alert alert-danger">
                     {error}
                 </div>
                )}
